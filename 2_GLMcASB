@@ -60,3 +60,11 @@ zz<-read.table("beta3_pvalue_GLM.txt",header=FALSE,stringsAsFactors = FALSE)
 t(zz)->zz
 write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
 
+#fdr
+p<-read.table("pvalue",header=FALSE,stringsAsFactors = FALSE)
+library(fdrtool)
+as.matrix(p)->p; as.numeric(p)->p
+fdrtool(p, statistic = "pvalue", plot = FALSE)->fdr
+fdr$lfdr->fdr
+write.table(fdr,"fdr",quote=FALSE,row.names=FALSE,col.names=FALSE)
+
