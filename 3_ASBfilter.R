@@ -30,3 +30,4 @@ results[which(results$`*`>0),]->results   #MSC(886);MCF7(300)
 results->hotplot2
 hotplot2[which(hotplot2$deta_PSSM > 5 | hotplot2$deta_PSSM < -5),]->hotplot3 #MSC(406),MCF7(122)
 #
+write.table(hotplot3,"MCF7_filterd",quote=FALSE,row.names=FALSE,col.names=FALSE)
