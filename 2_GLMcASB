@@ -1,1 +1,62 @@
+###################################################################################
+#######4. Detect Allele Specific Occupancy with GLM
+#need R.package/MASS/
+###################################################################################
+#MCF7
+library(MASS)
+setwd("/Users/xsw/bio/AS-TF_occupancy/data/human_MCF7/")
+count<-read.table("aaaa",header=T,stringsAsFactors = FALSE)
+allele<-c(0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1)
+region<-c(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1)
+sample<-c('c1','c1','c1','c1','c2','c2','c2','c2','c3','c3','c3','c3','1h1','1h1','1h1','1h1','1h2','1h2','1h2','1h2','1h3','1h3','1h3','1h3','3h1','3h1','3h1','3h1','3h2','3h2','3h2','3h2','3h3','3h3','3h3','3h3')
+GLM<-function(x){
+  as.integer(x)->count
+  DFPO<-data.frame(count, region, allele, sample)
+  tryCatch({a<-glm.nb(count ~ region + allele + region:allele + sample, data = DFPO)
+  summary(a)$coef[,1][12]->beta 
+  summary(a)$coef[,4][12]->p;out<-c(beta,p)} ,error = function(e) {    "NA"   })
+  }
+apply(count,1,GLM)->zz
+write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
+zz<-read.table("beta3_pvalue_GLM.txt",header=FALSE,stringsAsFactors = FALSE)
+t(zz)->zz
+write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
+#MSC
+library(MASS)
+setwd("/Users/xsw/bio/AS-TF_occupancy/data/human_LPS/")
+count<-read.table("aaaa",header=T,stringsAsFactors = FALSE)
+allele<-c(0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1)
+region<-c(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1)
+sample<-c('3NA','3NA','3NA','3NA','4NA','4NA','4NA','4NA','7LPS','7LPS','7LPS','7LPS','8LPS','8LPS','8LPS','8LPS','9PDGF','9PDGF','9PDGF','9PDGF','11PDGF','11PDGF','11PDGF','11PDGF')
+GLM<-function(x){
+  as.integer(x)->count
+  DFPO<-data.frame(count, region, allele, sample)
+  tryCatch({a<-glm.nb(count ~ region + allele + region:allele + sample, data = DFPO)
+  summary(a)$coef[,1][9]->beta 
+  summary(a)$coef[,4][9]->p;out<-c(beta,p)} ,error = function(e) {    "NA"   })
+}
+apply(count,1,GLM)->zz
+write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
+zz<-read.table("beta3_pvalue_GLM.txt",header=FALSE,stringsAsFactors = FALSE)
+t(zz)->zz
+write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
+#MOUSE
+library(MASS)
+setwd("/Users/xsw/bio/AS-TF_occupancy/data/mouse/")
+count<-read.table("aaaa",header=T,stringsAsFactors = FALSE)
+allele<-c(0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,1)
+region<-c(0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1)
+sample<-c('H1','H1','H1','H1','H2','H2','H2','H2','I1','I1','I1','I1','I2','I2','I2','I2')
+GLM<-function(x){
+  as.integer(x)->count
+  DFPO<-data.frame(count, region, allele, sample)
+  tryCatch({a<-glm.nb(count ~ region + allele + region:allele + sample, data = DFPO)
+  summary(a)$coef[,1][7]->beta3 
+  summary(a)$coef[,4][7]->p;out<-c(beta3,p)} ,error = function(e) {    "NA"   })
+}
+apply(count,1,GLM)->zz
+write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
+zz<-read.table("beta3_pvalue_GLM.txt",header=FALSE,stringsAsFactors = FALSE)
+t(zz)->zz
+write.table(zz,"beta3_pvalue_GLM.txt",quote=FALSE,row.names=FALSE,col.names=FALSE)
 
