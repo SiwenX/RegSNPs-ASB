@@ -73,7 +73,7 @@ for(i in 1:nrow(peak)){
   cat(peak_seq[i], file = "fasta.txt", sep = "", append = TRUE)
   cat("\n", file = "fasta.txt", append = TRUE)
 }
-# fimo /home/xsw/data/fimo/JASPAR_CORE_2016.meme /media/b/xsw/ATAC_mouse/peak file/fastaHI.txt --o /media/b/xsw/ATAC_mouse/fimo_out_HI
+# fimo /home/xsw/data/fimo/JASPAR_CORE_2016.meme /media/b/xsw/ATAC_mouse/peak_file/fastaHI.txt --o /media/b/xsw/ATAC_mouse/fimo_out_HI
 
 #shift TFBS 1bp 
 setwd("/media/b/xsw/atac_1201/fimo/fimo_out")
