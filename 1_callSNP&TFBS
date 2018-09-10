@@ -58,7 +58,7 @@ write.table(peak,"peak_intersect.bed",quote=FALSE,row.names=FALSE,col.names=T)
 #########################################################################################
 ########2. Predict TF binding sites within open chromatin regions
 #need R.package /BSgenome/
-#need tool /FIMO/ 
+#need tool /FIMO (meme4.12.0)/ 
 #########################################################################################
 library('BSgenome')
 #source("http://bioconductor.org/biocLite.R")
@@ -81,12 +81,30 @@ fimo<-read.delim("fimo.txt",header=TRUE)
 fenkai<-function(x){
   a<-c()
   x[1]->a[1]
-  as.character(strsplit(as.character(x[2]), split = "-", fixed = TRUE)[[1]][1])->a[2]
-  as.numeric(strsplit(as.character(x[2]), split = "-", fixed = TRUE)[[1]][2])+as.numeric(x[3]) - 1 -> a[3] 
-  as.numeric(strsplit(as.character(x[2]), split = "-", fixed = TRUE)[[1]][2])+as.numeric(x[4]) - 1 -> a[4]
-  x[5]->a[5];x[6]->a[6];x[7]->a[7];x[8]->a[8];x[9]->a[9]
+  x[2]->a[2]
+  as.character(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][1])->a[3]
+  as.numeric(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][2])+as.numeric(x[4]) - 1 -> a[4] 
+  as.numeric(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][2])+as.numeric(x[5]) - 1 -> a[5]
   return(a)
 }
 t(apply(fimo,1,fenkai))->aa
 write.table(aa,"ALL_TFBS_shifted.txt",quote=FALSE,row.names=FALSE,col.names=F)
+
+
+#######################################################
+##############finding TFBS with SNP
+#######################################################
+setwd("C:\\Users\\Administrator\\Desktop\\")
+library("GenomicRanges") 
+peak1<-read.table("ALL_TFBS_shifted.txt",header=FALSE,stringsAsFactors = FALSE)
+peak2<-read.table("hete_SNP_2",header=FALSE,stringsAsFactors = FALSE)
+colnames(peak1)<-c("ID", "chr","start","end");
+colnames(peak2)<-c("chr","start","end","REF","ALT")
+Range1<-with(peak1,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
+Range2<-with(peak2,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
+findOverlaps(Range1,Range2)->a
+peak1[a@from,]->TFBS_with_SNP.bed
+peak2[a@to,]->SNP_in_TFBS.bed
+write.table(TFBS_with_SNP.bed,"TFBS_with_SNP.bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
+write.table(SNP_in_TFBS.bed,"SNP_in_TFBS.bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
 
