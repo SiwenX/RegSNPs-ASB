@@ -16,7 +16,7 @@ do
 	cat fragments_for_noSS.bed fragments_rev_noSS.bed > fragments_noSS.bed	
 	((n=n+1))
 	echo $n
-	Rscript ASO.R $pos $sta $n
+	Rscript ASB.R $pos $sta $n
 
 done
 
