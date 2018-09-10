@@ -9,7 +9,7 @@ sam<-read.table("fragments.bed",header=FALSE)
 snp[arg[3],]->snp; tfbs[arg[3],]->tfbs
 as.numeric(arg[2])->sam[,6]
 colnames(snp)<-c("chr","start","end","ref","alt");
-colnames(tfbs)<-c("ID","chr","start","end");
+colnames(tfbs)<-c("ID1","ID2","chr","start","end");
 colnames(sam)<-c("chr", "start", "end", "seq","cigar", "snp");
 
 ##N or n
@@ -72,7 +72,7 @@ length(which(count=="no"))->no
 length(which(count=="nx"))->nx
 x = c(No, no, Nx, nx)
 
-as.character(tfbs[[1]])->ID ;as.character(tfbs[[2]])->Pos; as.numeric(tfbs[3])->Sta; as.numeric(tfbs[4])->End; as.numeric(snp[2])->Snp
+as.character(tfbs[[2]])->ID ;as.character(tfbs[[3]])->Pos; as.numeric(tfbs[4])->Sta; as.numeric(tfbs[5])->End; as.numeric(snp[6])->Snp
 c(ID,Pos,Sta,End,Snp,No,no,Nx,nx)->zz
 cat(zz, file = "ASO.txt", append = TRUE)
 cat("\n", file = "ASO.txt", append = TRUE)
