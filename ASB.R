@@ -10,8 +10,10 @@ snp[arg[3],]->snp; tfbs[arg[3],]->tfbs
 as.numeric(arg[2])->sam[,6]
 colnames(snp)<-c("chr","start","end","ref","alt");
 colnames(tfbs)<-c("ID1","ID2","chr","start","end");
-colnames(sam)<-c("chr", "start", "end", "seq","cigar", "snp");
-
+tryCatch({sam<-read.table("fragments_noSS.bed",header=FALSE)} ,error = function(e)
+{
+    cat(c(0,0,0,0,0,0,0,0,0), file = "ASB.txt", append = TRUE)
+    cat("\n", file = "ASB.txt", append = TRUE)  })
 ##N or n
 myfunction1 <- function(x){
   ifelse(x[2] < tfbs$start && x[3] > tfbs$end, "N"->n, "n"->n)
@@ -74,7 +76,7 @@ x = c(No, no, Nx, nx)
 
 as.character(tfbs[[2]])->ID ;as.character(tfbs[[3]])->Pos; as.numeric(tfbs[4])->Sta; as.numeric(tfbs[5])->End; as.numeric(snp[6])->Snp
 c(ID,Pos,Sta,End,Snp,No,no,Nx,nx)->zz
-cat(zz, file = "ASO.txt", append = TRUE)
-cat("\n", file = "ASO.txt", append = TRUE)
+cat(zz, file = "ASB.txt", append = TRUE)
+cat("\n", file = "ASB.txt", append = TRUE)
 
 
