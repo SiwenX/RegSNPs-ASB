@@ -16,7 +16,13 @@ tryCatch({sam<-read.table("fragments_noSS.bed",header=FALSE)} ,error = function(
     cat("\n", file = "ASB.txt", append = TRUE)  })
 ##N or n
 myfunction1 <- function(x){
-  ifelse(x[2] < tfbs$start && x[3] > tfbs$end, "N"->n, "n"->n)
+  if(x[6] < tfbs$start-10 | x[6] > tfbs$end+10){ 
+    "N"->n
+  }else if(x[6] > tfbs$start & x[6] < tfbs$end){
+    "n"->n
+  }else {
+    "NA"->n
+  }
 }
 apply(sam, 1, myfunction1)->aa
 
