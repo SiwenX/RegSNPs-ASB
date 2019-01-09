@@ -1,4 +1,4 @@
-# Pro1
+# RegSNPs-ASB
 RegSNPs-ASB
 workflow:
     
