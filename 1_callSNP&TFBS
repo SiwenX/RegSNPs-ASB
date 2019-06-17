@@ -1,18 +1,20 @@
+#######################################################################################
 ## Call SNP
 #need tools /samtools/
-1. merge .bam files (samtools merge)
-2. samtools0.1.18 mpileup -uf  reference.fa input.bam | bcftools0.1.17 view -Nvcg - > SNP.vcf
+#######################################################################################
+1. samtools merge input.bam files (if you have multiple treatments, you should merge them together to increase the read coverage)
+2. samtools mpileup -uf reference.fa input.bam | bcftools view -Nvcg - > SNP.vcf
 3. filter SNP
-grep "0/1:" 3_NA_SNP.vcf > 3_NA_SNP_hete.vcf
-vcffilter -f "DP > 10 & MQ > 20" .vcf >filtered.vcf
-grep -v "INDEL" wgEncodeUwDgfK562Znfa41c6Aln.vcf > UWDGF_noindel.vcf
+grep "0/1:" SNP.vcf > hete_SNP.vcf
+vcffilter -f "DP > 10 & MQ > 20" hete_SNP.vcf > hete_SNP_filtered.vcf
+grep -v "INDEL" hete_SNP_filtered.vcf > hete_SNP_filtered_noindel.vcf
 
 #extract SNP
-setwd("/media/b/xsw/atac_1201/")
-snp<-read.table("DP10MQ20_hete_non-indel.SNP.vcf",header=F,stringsAsFactors = FALSE)
-snp[,c(1,2,2,4,5)]->a    #fiter the SNP with two allele
-colnames(a) <- c(chr,sta,end,ref,alt)
-write.table(a,"ALL_hete_SNP.bed",quote=FALSE,row.names=FALSE,col.names=F)
+setwd("")
+snp <- read.table("hete_SNP_filtered_noindel.vcf",header=F,stringsAsFactors = FALSE)
+snp[, c(1,2,2,4,5)] -> a    #fiter the SNP with two allele
+colnames(a) <- c(chr, sta, end, ref, alt)
+write.table(a, "ALL_hete_SNP.bed", quote=FALSE, row.names=FALSE, col.names=F)
 
 ## Call TFBS
 #######################################################################################
@@ -20,40 +22,41 @@ write.table(a,"ALL_hete_SNP.bed",quote=FALSE,row.names=FALSE,col.names=F)
 #need package /GenomicRanges/
 #######################################################################################
 setwd("")
-peak1<-read.table(".narrowPeak",header=FALSE,stringsAsFactors = FALSE)
-peak1[which(peak1[,5]>200),c(1,2,3)]->peak1_200
-write.table(peak1_200,".bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
-peak2<-read.table(".narrowPeak",header=FALSE,stringsAsFactors = FALSE)
-peak2[which(peak2[,5]>200),c(1,2,3)]->peak2_200
-write.table(peak2_200,".bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
-peak3<-read.table(".narrowPeak",header=FALSE,stringsAsFactors = FALSE)
-peak3[which(peak3[,5]>200),c(1,2,3)]->peak3_200
-write.table(peak3_200,".bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
-peak4<-read.table(".narrowPeak",header=FALSE,stringsAsFactors = FALSE)
-peak4[which(peak4[,5]>200),c(1,2,3)]->peak4_200
-write.table(peak4_200,".bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
-peak5<-read.table(".narrowPeak",header=FALSE,stringsAsFactors = FALSE)
-peak5[which(peak5[,5]>200),c(1,2,3)]->peak5_200
-write.table(peak5_200,".bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
-peak6<-read.table(".narrowPeak",header=FALSE,stringsAsFactors = FALSE)
-peak6[which(peak6[,5]>200),c(1,2,3)]->peak6_200
-write.table(peak6_200,".bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
+peak1 <- read.table(".narrowPeak", header=FALSE, stringsAsFactors = FALSE)
+peak1[which(peak1[, 5] > 200), c(1, 2, 3)] -> peak1_200
+write.table(peak1_200, ".bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+peak2 <- read.table(".narrowPeak", header=FALSE, stringsAsFactors = FALSE)
+peak2[which(peak2[, 5] > 200), c(1, 2, 3)] -> peak2_200
+write.table(peak2_200, ".bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+peak3 <- read.table(".narrowPeak", header=FALSE, stringsAsFactors = FALSE)
+peak3[which(peak3[, 5] > 200), c(1, 2, 3)] -> peak3_200
+write.table(peak3_200, ".bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+peak4 <- read.table(".narrowPeak", header=FALSE, stringsAsFactors = FALSE)
+peak4[which(peak4[, 5] > 200), c(1, 2, 3)] -> peak4_200
+write.table(peak4_200, ".bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+peak5 <- read.table(".narrowPeak", header=FALSE, stringsAsFactors = FALSE)
+peak5[which(peak5[, 5] > 200), c(1, 2, 3)] -> peak5_200
+write.table(peak5_200, ".bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+peak6 <- read.table(".narrowPeak", header=FALSE, stringsAsFactors = FALSE)
+peak6[which(peak6[, 5] > 200), c(1, 2, 3)] -> peak6_200
+write.table(peak6_200, ".bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
 
 library("GenomicRanges") 
-colnames(peak1_200)<-c("chr","start","end"); colnames(peak2_200)<-c("chr","start","end");
-colnames(peak3_200)<-c("chr","start","end"); colnames(peak4_200)<-c("chr","start","end");
-colnames(peak5_200)<-c("chr","start","end"); colnames(peak6_200)<-c("chr","start","end");
-p1Range<-with(peak1_200,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-p2Range<-with(peak2_200,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-p3Range<-with(peak3_200,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-p4Range<-with(peak4_200,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-p5Range<-with(peak5_200,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-p6Range<-with(peak6_200,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-union(p1Range,p2Range)->NA_union; union(p3Range,p4Range)->LPS_union; union(p5Range,p6Range)->PDGF_union;
-Reduce(intersect,list(p1Range,p2Range,p3Range,p4Range,p5Range,p6Range,p7Range,p8Range,p9Range))->intersection
-as.data.frame(intersection)->intersection
-intersection[,1:3]->peak
-write.table(peak,"peak_intersect.bed",quote=FALSE,row.names=FALSE,col.names=T)
+colnames(peak1_200) <- c("chr", "start", "end"); colnames(peak2_200) <- c("chr", "start", "end");
+colnames(peak3_200) <- c("chr", "start", "end"); colnames(peak4_200) <- c("chr", "start", "end");
+colnames(peak5_200) <- c("chr", "start", "end"); colnames(peak6_200) <- c("chr", "start", "end");
+p1Range<-with(peak1_200, GRanges(seqnames=chr, ranges=IRanges(start=start, end=end), strand="*"));
+p2Range<-with(peak2_200, GRanges(seqnames=chr, ranges=IRanges(start=start, end=end), strand="*"));
+p3Range<-with(peak3_200, GRanges(seqnames=chr, ranges=IRanges(start=start, end=end), strand="*"));
+p4Range<-with(peak4_200, GRanges(seqnames=chr, ranges=IRanges(start=start, end=end), strand="*"));
+p5Range<-with(peak5_200, GRanges(seqnames=chr, ranges=IRanges(start=start, end=end), strand="*"));
+p6Range<-with(peak6_200, GRanges(seqnames=chr, ranges=IRanges(start=start, end=end), strand="*"));
+
+Reduce(intersect, list(p1Range, p2Range, p3Range, p4Range, p5Range, p6Range, p7Range, p8Range, p9Range)) -> intersection
+
+as.data.frame(intersection) -> intersection
+intersection[, 1:3] -> peak
+write.table(peak, "peak_intersect.bed", quote=FALSE, row.names=FALSE, col.names=T)
 
 #########################################################################################
 ########2. Predict TF binding sites within open chromatin regions
@@ -73,22 +76,22 @@ for(i in 1:nrow(peak)){
   cat(peak_seq[i], file = "fasta.txt", sep = "", append = TRUE)
   cat("\n", file = "fasta.txt", append = TRUE)
 }
-# fimo /home/xsw/data/fimo/JASPAR_CORE_2016.meme /media/b/xsw/ATAC_mouse/peak_file/fastaHI.txt --o /media/b/xsw/ATAC_mouse/fimo_out_HI
+fimo /home/xsw/data/fimo/JASPAR_CORE_2016.meme /media/b/xsw/ATAC_mouse/peak_file/fasta.txt --o /media/b/xsw/ATAC_mouse/fimo_out
 
 #shift TFBS 1bp 
 setwd("/media/b/xsw/atac_1201/fimo/fimo_out")
-fimo<-read.delim("fimo.txt",header=TRUE)
-fenkai<-function(x){
+fimo <- read.delim("fimo.txt",header=TRUE)
+shift <- function(x){
   a<-c()
-  x[1]->a[1]
-  x[2]->a[2]
-  as.character(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][1])->a[3]
+  x[1] -> a[1]
+  x[2] -> a[2]
+  as.character(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][1]) -> a[3]
   as.numeric(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][2])+as.numeric(x[4]) - 1 -> a[4] 
   as.numeric(strsplit(as.character(x[3]), split = "-", fixed = TRUE)[[1]][2])+as.numeric(x[5]) - 1 -> a[5]
   return(a)
 }
-t(apply(fimo,1,fenkai))->aa
-write.table(aa,"ALL_TFBS_shifted.txt",quote=FALSE,row.names=FALSE,col.names=F)
+t(apply(fimo, 1, shift)) -> aa
+write.table(aa, "ALL_TFBS_shifted.txt", quote=FALSE, row.names=FALSE, col.names=F)
 
 
 #######################################################
@@ -96,15 +99,15 @@ write.table(aa,"ALL_TFBS_shifted.txt",quote=FALSE,row.names=FALSE,col.names=F)
 #######################################################
 setwd("C:\\Users\\Administrator\\Desktop\\")
 library("GenomicRanges") 
-peak1<-read.table("ALL_TFBS_shifted.txt",header=FALSE,stringsAsFactors = FALSE)
-peak2<-read.table("hete_SNP_2",header=FALSE,stringsAsFactors = FALSE)
-colnames(peak1)<-c("ID", "chr","start","end");
-colnames(peak2)<-c("chr","start","end","REF","ALT")
-Range1<-with(peak1,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-Range2<-with(peak2,GRanges(seqnames=chr,ranges=IRanges(start=start,end=end),strand="*"));
-findOverlaps(Range1,Range2)->a
-peak1[a@from,]->TFBS_with_SNP.bed
-peak2[a@to,]->SNP_in_TFBS.bed
-write.table(TFBS_with_SNP.bed,"TFBS_with_SNP.bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
-write.table(SNP_in_TFBS.bed,"SNP_in_TFBS.bed",quote=FALSE,row.names=FALSE,col.names=FALSE)
+peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
+peak2 <- read.table("ALL_hete_SNP.bed", header = FALSE, stringsAsFactors = FALSE)
+colnames(peak1) <- c("ID", "chr", "start", "end");
+colnames(peak2) <- c("chr", "start", "end", "REF", "ALT")
+Range1 <- with(peak1, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
+Range2 <- with(peak2, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
+findOverlaps(Range1, Range2) -> a
+peak1[a@from, ] -> TFBS_with_SNP.bed
+peak2[a@to, ] -> SNP_in_TFBS.bed
+write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
 
