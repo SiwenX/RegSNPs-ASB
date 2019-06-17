@@ -5,7 +5,7 @@ cat gene.bed | while read line
 do
 #SNP call
 	line_arr=( $line )
-    chr="chr"
+    	chr="chr"
 	name=${line_arr[0]}
 	pos=${line_arr[1]}
 	sta=${line_arr[2]}
