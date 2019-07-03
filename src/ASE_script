@@ -1,0 +1,30 @@
+#!/bin/bash
+
+n=0
+cat gene.bed | while read line
+do
+#SNP call
+	line_arr=( $line )
+    	chr="chr"
+	name=${line_arr[0]}
+	pos=${line_arr[1]}
+	sta=${line_arr[2]}
+	end=${line_arr[3]}
+    echo $name
+samtools merge -R ${chr}${pos}:$sta-$end -f ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene.bam MCF7_RNA1_S23_Aligned.sortedByCoord.out.bam MCF7_RNA2_S24_Aligned.sortedByCoord.out.bam MCF7_RNA3_S25_Aligned.sortedByCoord.out.bam MCF7E2_3hrs_RNA1_S26_Aligned.sortedByCoord.out.bam MCF7E2_3hrs_RNA2_S27_Aligned.sortedByCoord.out.bam MCF7E2_3hrs_RNA3_S28_Aligned.sortedByCoord.out.bam
+samtools mpileup -uf /Users/xsw/bio/database/ucsc.hg19.fasta ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene.bam | bcftools call -vm -o ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene.vcf
+#vcf filter
+vcffilter -f "DP > 30 & MQ > 20"  ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene.vcf > ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene2.vcf
+grep -v "INDEL" ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene2.vcf > ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene3.vcf
+grep "0/1:" ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene3.vcf > ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene4.vcf
+    ((n=n+1))
+    echo $n
+Rscript ASE.R $name $n
+rm -f ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene.bam
+rm -f ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene.vcf
+rm -f ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene2.vcf
+rm -f ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene3.vcf
+rm -f ~/bio/AS-TF_occupancy/data/RNA-seq/target_gene/gene4.vcf
+
+
+done
