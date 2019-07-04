@@ -53,7 +53,7 @@ Range2 <- with(peak2, GRanges(seqnames = chr, ranges = IRanges(start = start,end
 findOverlaps(Range1, Range2) -> a
 peak1[a@from, ] -> TFBS_with_SNP.bed
 peak2[a@to, ] -> SNP_in_TFBS.bed
-write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
-write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote=FALSE, row.names=FALSE, col.names=FALSE)
+write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
+write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
   
