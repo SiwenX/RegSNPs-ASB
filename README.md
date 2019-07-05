@@ -24,43 +24,43 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
     - `$vcffilter -f "DP > 10 & MQ > 20" hete_SNP.vcf > hete_SNP_filtered.vcf` # filter SNP by depth and quality
   - Step 2. Call TFBS
     - prepare sequence file
-    ```
-    library("GenomicRanges")
-    library('BSgenome')
-    peak <- read.table("ATAC.narrowPeak", header = T, stringsAsFactors = FALSE)
-    Range <- with(peak, GRanges(seqnames = chr, ranges = IRanges(start=start, end = end), strand = "*"))
-    library("BSgenome.Hsapiens.UCSC.hg19")
-    as.character(getSeq(BSgenome.Hsapiens.UCSC.hg19, peak$seqnames, start = peak$start, end = peak$end, strand = "+"))->peak_seq
-    for(i in 1:nrow(peak)){
-    cat(">", as.character(peak[i,1]), file = "fasta.txt", sep = "", append = TRUE)
-    cat("-", file = "fasta.txt", append = TRUE)
-    cat(as.character(peak[i,2]),"-",as.character(peak[i,3]),file = "fasta.txt", sep = "", append = TRUE)
-    cat("\n", file = "fasta.txt", append = TRUE)
-    cat(peak_seq[i], file = "fasta.txt", sep = "", append = TRUE)
-    cat("\n", file = "fasta.txt", append = TRUE)
-    }
-    ``` 
+      ```
+      library("GenomicRanges")
+      library('BSgenome')
+      peak <- read.table("ATAC.narrowPeak", header = T, stringsAsFactors = FALSE)
+      Range <- with(peak, GRanges(seqnames = chr, ranges = IRanges(start=start, end = end), strand = "*"))
+      library("BSgenome.Hsapiens.UCSC.hg19")
+      as.character(getSeq(BSgenome.Hsapiens.UCSC.hg19, peak$seqnames, start = peak$start, end = peak$end, strand = "+"))->peak_seq
+      for(i in 1:nrow(peak)){
+      cat(">", as.character(peak[i,1]), file = "fasta.txt", sep = "", append = TRUE)
+      cat("-", file = "fasta.txt", append = TRUE)
+      cat(as.character(peak[i,2]),"-",as.character(peak[i,3]),file = "fasta.txt", sep = "", append = TRUE)
+      cat("\n", file = "fasta.txt", append = TRUE)
+      cat(peak_seq[i], file = "fasta.txt", sep = "", append = TRUE)
+      cat("\n", file = "fasta.txt", append = TRUE)
+       }
+      ``` 
     - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
   - Step 3. Call potential allele-specific TFBS
-  ```
-  library("GenomicRanges") 
-  peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
-  peak2 <- read.table("ALL_hete_SNP.bed", header = FALSE, stringsAsFactors = FALSE)
-  colnames(peak1) <- c("ID", "chr", "start", "end");
-  colnames(peak2) <- c("chr", "start", "end", "REF", "ALT")
-  Range1 <- with(peak1, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
-  Range2 <- with(peak2, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
-  findOverlaps(Range1, Range2) -> a
-  peak1[a@from, ] -> TFBS_with_SNP.bed
-  peak2[a@to, ] -> SNP_in_TFBS.bed
-  write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
-  write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
-  ```
+    ```
+    library("GenomicRanges") 
+    peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
+    peak2 <- read.table("ALL_hete_SNP.bed", header = FALSE, stringsAsFactors = FALSE)
+    colnames(peak1) <- c("ID", "chr", "start", "end");
+    colnames(peak2) <- c("chr", "start", "end", "REF", "ALT")
+    Range1 <- with(peak1, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
+    Range2 <- with(peak2, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
+    findOverlaps(Range1, Range2) -> a
+    peak1[a@from, ] -> TFBS_with_SNP.bed
+    peak2[a@to, ] -> SNP_in_TFBS.bed
+    write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
+    write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
+    ```
   - Step 4. Using GLM to identify AS-TFBS
-  ```
-  $ASB.sh -i SNP_in_TFBS.bed
-  ```
+    ```
+    $ASB.sh -i SNP_in_TFBS.bed
+    ```
   - Step 5. Filtering AS-TFBS
-  ```
-  $Filter_ASB.sh -i ASB.txt
-  ```
+    ```
+    $Filter_ASB.sh -i ASB.txt
+    ```
