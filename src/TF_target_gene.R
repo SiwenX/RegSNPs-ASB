@@ -4,7 +4,7 @@ IN <- read.csv("4DGenome_HomoSapiens_hg19.txt", fill = T, sep = "\t")
 IN[which(IN$Cell.Tissue == 'MCF7'), ] -> IN_MCF7
 write.table(IN_MCF7, "Interaction_MCF7", quote = FALSE, row.names = FALSE, col.names = T, sep = "\t")
 
-#整理我们得到的RefSNPs
+#
 MCF7 <- read.table("/Users/xsw/bio/AS-TF_occupancy/result/MCF7_ASB", header = T)
 cbind(MCF7, MCF7[, 2]) -> MCF7_bed
 write.table(MCF7_bed, "MCF7.bed", quote = FALSE, row.names = FALSE, col.names = F, sep = '\t')
