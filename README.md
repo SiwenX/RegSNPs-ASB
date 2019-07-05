@@ -25,11 +25,16 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
   - Step 2. Call TFBS
     - prepare sequence file
       ```
+      # load required R 
       library("GenomicRanges")
       library('BSgenome')
-      peak <- read.table("ATAC.narrowPeak", header = T, stringsAsFactors = FALSE)
-      Range <- with(peak, GRanges(seqnames = chr, ranges = IRanges(start=start, end = end), strand = "*"))
       library("BSgenome.Hsapiens.UCSC.hg19")
+      
+      # load peak file
+      peak <- read.table("ATAC.narrowPeak", header = T, stringsAsFactors = FALSE)
+      
+      # get sequence within peaks
+      Range <- with(peak, GRanges(seqnames = chr, ranges = IRanges(start=start, end = end), strand = "*"))
       as.character(getSeq(BSgenome.Hsapiens.UCSC.hg19, peak$seqnames, start = peak$start, end = peak$end, strand = "+"))->peak_seq
       for(i in 1:nrow(peak)){
       cat(">", as.character(peak[i,1]), file = "fasta.txt", sep = "", append = TRUE)
