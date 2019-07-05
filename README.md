@@ -22,8 +22,8 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
     - `$samtools mpileup -uf reference.fa input.bam | bcftools view -Nvcg - > SNP.vcf`
     - `$grep "0/1:" SNP.vcf > hete_SNP.vcf`
     - `$vcffilter -f "DP > 10 & MQ > 20" hete_SNP.vcf > hete_SNP_filtered.vcf` # filter SNP by depth and quality
-  STEP2. Call TFBS
-  - prepare sequence file
+  - STEP2. Call TFBS
+    - prepare sequence file
   ```
   library("GenomicRanges")
   library('BSgenome')
@@ -40,8 +40,8 @@ for(i in 1:nrow(peak)){
   cat("\n", file = "fasta.txt", append = TRUE)
 }
   ``` 
-  - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
-  STEP3. Call potential allele-specific TFBS
+    - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
+  - STEP3. Call potential allele-specific TFBS
 ```
 library("GenomicRanges") 
 peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
@@ -56,11 +56,11 @@ peak2[a@to, ] -> SNP_in_TFBS.bed
 write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
-  STEP4. Using GLM to identify AS-TFBS
+  - STEP4. Using GLM to identify AS-TFBS
 ```
 $ASB.sh -i SNP_in_TFBS.bed
 ```
-  STEP5. Filtering AS-TFBS
+  - STEP5. Filtering AS-TFBS
 ```
 $Filter_ASB.sh -i ASB.txt
 ```
