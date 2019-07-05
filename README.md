@@ -68,7 +68,7 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
     ```
   - Step 4. Using GLM to identify AS-TFBS
     ```
-    $ASB.sh -i SNP_in_TFBS.bed
+    $Identify_ASB.sh -i SNP_in_TFBS.bed
     ```
   - Step 5. Filtering AS-TFBS
     ```
