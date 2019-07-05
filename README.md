@@ -56,4 +56,11 @@ peak2[a@to, ] -> SNP_in_TFBS.bed
 write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
-  
+  4. Using GLM to identify AS-TFBS
+```
+$ASB.sh -i SNP_in_TFBS.bed
+```
+  5. Filtering AS-TFBS
+```
+$Filter_ASB.sh -i ASB.txt
+```
