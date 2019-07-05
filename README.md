@@ -17,12 +17,12 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
       - plink2
       - vcffilter
 ## Usage
-  - STEP1. Call heterozygote variants
+  - Step 1. Call heterozygote variants
     - `$samtools merge input.bam files` # if you have multiple treatments, you should merge them together to increase the read coverage
     - `$samtools mpileup -uf reference.fa input.bam | bcftools view -Nvcg - > SNP.vcf`
     - `$grep "0/1:" SNP.vcf > hete_SNP.vcf`
     - `$vcffilter -f "DP > 10 & MQ > 20" hete_SNP.vcf > hete_SNP_filtered.vcf` # filter SNP by depth and quality
-  - STEP2. Call TFBS
+  - Step 2. Call TFBS
     - prepare sequence file
   ```
   library("GenomicRanges")
@@ -41,7 +41,7 @@ for(i in 1:nrow(peak)){
 }
   ``` 
     - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
-  - STEP3. Call potential allele-specific TFBS
+  - Step 3. Call potential allele-specific TFBS
 ```
 library("GenomicRanges") 
 peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
@@ -56,11 +56,11 @@ peak2[a@to, ] -> SNP_in_TFBS.bed
 write.table(TFBS_with_SNP.bed, "TFBS_with_SNP.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 write.table(SNP_in_TFBS.bed, "SNP_in_TFBS.bed", quote = FALSE, row.names = FALSE, col.names = FALSE)
 ```
-  - STEP4. Using GLM to identify AS-TFBS
+  - Step 4. Using GLM to identify AS-TFBS
 ```
 $ASB.sh -i SNP_in_TFBS.bed
 ```
-  - STEP5. Filtering AS-TFBS
+  - Step 5. Filtering AS-TFBS
 ```
 $Filter_ASB.sh -i ASB.txt
 ```
