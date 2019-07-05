@@ -25,8 +25,7 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
   - Step 2. Call TFBS
     - prepare sequence file
       ```
-      > load required R packages
-      #first load some data
+      # load required R packages
       library("GenomicRanges")
       library('BSgenome')
       library("BSgenome.Hsapiens.UCSC.hg19")
