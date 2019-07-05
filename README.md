@@ -25,7 +25,7 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
   - Step 2. Call TFBS
     - prepare sequence file
       ```
-      # load required R 
+      # load required R packages
       library("GenomicRanges")
       library('BSgenome')
       library("BSgenome.Hsapiens.UCSC.hg19")
@@ -48,11 +48,16 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
     - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
   - Step 3. Call potential allele-specific TFBS
     ```
+    # load required R packages
     library("GenomicRanges") 
+    
+    # load input files
     peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
     peak2 <- read.table("ALL_hete_SNP.bed", header = FALSE, stringsAsFactors = FALSE)
     colnames(peak1) <- c("ID", "chr", "start", "end");
     colnames(peak2) <- c("chr", "start", "end", "REF", "ALT")
+    
+    # get potential AS-TFBS
     Range1 <- with(peak1, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
     Range2 <- with(peak2, GRanges(seqnames = chr, ranges = IRanges(start = start,end = end), strand = "*"));
     findOverlaps(Range1, Range2) -> a
