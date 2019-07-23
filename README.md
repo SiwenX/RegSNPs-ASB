@@ -24,7 +24,7 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
     - `$vcffilter -f "DP > 10 & MQ > 20" hete_SNP.vcf > hete_SNP_filtered.vcf` # filter SNP by depth and quality
   - Step 2. Call TFBS
     - prepare sequence file
-      ```
+      ```javascript
       # load required R packages
       library("GenomicRanges")
       library('BSgenome')
