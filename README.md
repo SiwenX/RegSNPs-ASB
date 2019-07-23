@@ -47,7 +47,7 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
       ``` 
     - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
   - Step 3. Call potential allele-specific TFBS
-    ```
+    ```rscript
     # load required R packages
     library("GenomicRanges") 
     
