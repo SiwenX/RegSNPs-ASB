@@ -36,24 +36,24 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
       # get sequence within peaks
       Range <- with(peak, GRanges(seqnames = chr, ranges = IRanges(start=start, end = end), strand = "*"))
       as.character(getSeq(BSgenome.Hsapiens.UCSC.hg19, peak$seqnames, start = peak$start, end = peak$end, strand = "+"))->peak_seq
-      for(i in 1:nrow(peak)){
-      cat(">", as.character(peak[i,1]), file = "fasta.txt", sep = "", append = TRUE)
+      for(i in 1 : nrow(peak)){
+      cat(">", as.character(peak[i, 1]), file = "fasta.txt", sep = "", append = TRUE)
       cat("-", file = "fasta.txt", append = TRUE)
-      cat(as.character(peak[i,2]),"-",as.character(peak[i,3]),file = "fasta.txt", sep = "", append = TRUE)
+      cat(as.character(peak[i, 2]),"-",as.character(peak[i, 3]),file = "fasta.txt", sep = "", append = TRUE)
       cat("\n", file = "fasta.txt", append = TRUE)
       cat(peak_seq[i], file = "fasta.txt", sep = "", append = TRUE)
       cat("\n", file = "fasta.txt", append = TRUE)
        }
       ``` 
-    - `$fimo <motif file> <sequence file> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
+    - `$fimo <motif file> <fasta.txt> --o <output dir>` # motif file can be downloaded from http://jaspar.genereg.net/downloads/ 
   - Step 3. Call potential allele-specific TFBS
     ```rscript
     # load required R packages
     library("GenomicRanges") 
     
     # load input files
-    peak1 <- read.table("ALL_TFBS_shifted.txt", header = FALSE, stringsAsFactors = FALSE)
-    peak2 <- read.table("ALL_hete_SNP.bed", header = FALSE, stringsAsFactors = FALSE)
+    peak1 <- read.table("TFBS.txt", header = FALSE, stringsAsFactors = FALSE)
+    peak2 <- read.table("Hete_SNP.bed", header = FALSE, stringsAsFactors = FALSE)
     colnames(peak1) <- c("ID", "chr", "start", "end");
     colnames(peak2) <- c("chr", "start", "end", "REF", "ALT")
     
