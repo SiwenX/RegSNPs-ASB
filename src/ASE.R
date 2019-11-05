@@ -1,7 +1,7 @@
 arg <- commandArgs(T)
-setwd('/Users/xsw/bio/AS-TF_occupancy/data/RNA-seq/target_gene/')
+setwd('')
 arg[1] -> gene_id
-gene <- read.table("/Users/xsw/bio/AS-TF_occupancy/data/RNA-seq/gene.bed", header=F, stringsAsFactors = FALSE)
+gene <- read.table("gene.bed", header=F, stringsAsFactors = FALSE)
 gene[arg[2], ] -> gene
 tryCatch({aa <- read.table("gene4.vcf", header=F, stringsAsFactors = FALSE)}, error = function(e) 
 {  cat("No SNPs")   })
