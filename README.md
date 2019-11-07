@@ -3,7 +3,7 @@ RegSNPs-ASB is a pipeline for extracting regulatory SNPs from ATAC-seq data. Reg
 ## Overall flow chart
 ![Image of flow chart](https://github.com/SiwenX/RegSNP-ASB/blob/master/Figures/Fig2.png)
 ## Installation
-`git clone https://github.com/SiwenX/RegSNP-ASB.git`
+`git clone https://github.com/SiwenX/RegSNPs-ASB.git`
 ## Requirements
   - Linux working environment 
   - R packages
